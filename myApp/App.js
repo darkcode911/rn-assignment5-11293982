@@ -1,28 +1,42 @@
-import React, { useState, useMemo } from 'react';
-import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import HomeScreen from './screens/HomeScreen';
-import SettingsScreen from './screens/SettingsScreen';
-import { ThemeContext } from './theme/ThemeContext';
+import "react-native-gesture-handler";
+import React, { useEffect, useState } from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import * as Font from "expo-font";
+import { Ionicons } from "@expo/vector-icons";
+import BottomTabs from "./components/BottomTabs"; 
+import { ThemeProvider } from "./theme/ThemeProvider"; 
+import { View, ActivityIndicator } from "react-native";
 
-const Tab = createBottomTabNavigator();
 
-export default function App() {
-  const [theme, setTheme] = useState('light');
+const App = () => {
+  const [fontsLoaded, setFontsLoaded] = useState(false);
 
-  const themeData = useMemo(() => ({
-    theme,
-    setTheme
-  }), [theme]);
+  useEffect(() => {
+    async function loadFonts() {
+      await Font.loadAsync({
+        ...Ionicons.font,
+      });
+      setFontsLoaded(true);
+    }
+
+    loadFonts();
+  }, []);
+
+  if (!fontsLoaded) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
 
   return (
-    <ThemeContext.Provider value={themeData}>
-      <NavigationContainer theme={theme === 'dark' ? DarkTheme : DefaultTheme}>
-        <Tab.Navigator>
-          <Tab.Screen name="Home" component={HomeScreen} />
-          <Tab.Screen name="Settings" component={SettingsScreen} />
-        </Tab.Navigator>
+    <ThemeProvider>
+      <NavigationContainer>
+        <BottomTabs />
       </NavigationContainer>
-    </ThemeContext.Provider>
+    </ThemeProvider>
   );
-}
+};
+
+export default App;
