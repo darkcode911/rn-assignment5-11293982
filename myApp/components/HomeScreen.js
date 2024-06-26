@@ -213,6 +213,7 @@ padding: 7,
 top: {
 flexDirection: "row",
 alignItems: "center",
+marginTop: 80,
 marginBottom: 20,
 },
 userimage: {
@@ -243,7 +244,7 @@ width: 20,
 height: 20,
 },
 card: {
-padding: 5,
+padding: 30,
 marginBottom: 20,
 },
 buttons: {
